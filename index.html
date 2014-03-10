@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>angular-extending-directive</title>
+        <style type="text/css">
+       .circle {
+            border: 1px black solid;
+            text-align: center;
+            font-size: 40px;
+            border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50%;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: pointer;
+            padding:4px;
+        }
+         .counter {
+            width: 50px;
+            height: 50px;
+            background-color: green;         
+        }
+
+        .wrapcounter {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            box-pack: center;
+            box-align: center;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        </style>
+        <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="scripts/app.js"></script>
+    </head>
+    <body ng-app="myApp">
+        <h1>counter</h1> 
+
+        <counter></counter>
+
+
+        <h1>wrapcounter</h1> 
+        <wrapcounter>
+            <counter></counter>
+        </wrapcounter>
+
+
+    </body>
+</html>
