@@ -1,3 +1,5 @@
+Working example : http://thaiat.github.io/angular-extending-directive/
+
 Original post is available at http://codrspace.com/thaiat/extending-an-existing-directive-in-angularjs/
 
 
