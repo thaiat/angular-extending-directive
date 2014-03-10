@@ -1,3 +1,5 @@
+Original post is available at http://codrspace.com/thaiat/extending-an-existing-directive-in-angularjs/
+
 Let's say you have a third party angularjs directive that you want to extend or simply access the api defined by its controller.   
 We could use `require` but that means that we have to put the 2 directives on the same element, or that the extended directive should be contained inside the first one (looks weird).  
 Well... this is not always possible as we do not have control on the code defining the first directive. It could restrict its usage to 'E', meaning that our extended directive cannot be anymore retricted to 'E'.
