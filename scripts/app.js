@@ -30,7 +30,7 @@ myApp.directive('wrapcounter', function () {
 		transclude: true,
 		template: '<div class="circle wrapcounter" ng-transclude></div>',
 		link: function (scope, iElm, iAttrs, controller) {
-			// retreive the inner directive element
+			// retrieve the inner directive element
 			var counter = iElm.find('counter')[0];
 
 			var innerController = angular.element(counter).controller('counter');

@@ -1,7 +1,9 @@
 Original post is available at http://codrspace.com/thaiat/extending-an-existing-directive-in-angularjs/
 
+
 Let's say you have a third party angularjs directive that you want to extend or simply access the api defined by its controller.   
-We could use `require` but that means that we have to put the 2 directives on the same element, or that the extended directive should be contained inside the first one (looks weird).  
+We could use `require` but that means that we have to put the 2 directives on the same element, or that the extended directive should be contained inside the first one (looks weird), because require will look up the chain of html.
+  
 Well... this is not always possible as we do not have control on the code defining the first directive. It could restrict its usage to 'E', meaning that our extended directive cannot be anymore restricted to 'E'.
 
 How can we easily do that, and in a more natural way meaning the extended directive should wrap the first directive ?
@@ -56,28 +58,28 @@ Again this is pretty simple, and here is the code.
 ```javascript
 var myApp = angular.module('myApp', []);
 myApp.directive('counter', function () {
-	return {
-		scope: {},
-		controller: function ($scope, $element, $attrs, $transclude) {
-			$scope.value = 0;
-			$scope.increment = function () {
-				$scope.value += 1;
+  return {
+    scope: {},
+    controller: function ($scope, $element, $attrs, $transclude) {
+      $scope.value = 0;
+      $scope.increment = function () {
+        $scope.value += 1;
 
-			};
-		},
+      };
+    },
 
-		link: function (scope, iElm, iAttrs, controller) {
-			iElm.on('click', function (e) {
-				e.stopPropagation();
-				scope.$apply(function () {
-					console.log('click counter');
-					scope.increment();
-				});
-			});
-		},
-		restrict: 'E',
-		template: '<div class="circle counter">{{value}}</div>'
-	};
+    link: function (scope, iElm, iAttrs, controller) {
+      iElm.on('click', function (e) {
+        e.stopPropagation();
+        scope.$apply(function () {
+          console.log('click counter');
+          scope.increment();
+        });
+      });
+    },
+    restrict: 'E',
+    template: '<div class="circle counter">{{value}}</div>'
+  };
 });
 ```
 
@@ -91,7 +93,7 @@ The html for this new directive should be:
 ```html
 <h1>wrapcounter</h1> 
 <wrapcounter>
-	<counter></counter>
+  <counter></counter>
 </wrapcounter>
 ```
 
@@ -120,28 +122,28 @@ If the first directive controller uses $scope (like above) we have to retrieve t
 
 ```javascript
 myApp.directive('wrapcounter', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		template: '<div class="circle wrapcounter" ng-transclude></div>',
-		link: function (scope, iElm, iAttrs, controller) {
-		  // retrieve the inner directive element
-			var counter = iElm.find('counter')[0];
+  return {
+    restrict: 'E',
+    transclude: true,
+    template: '<div class="circle wrapcounter" ng-transclude></div>',
+    link: function (scope, iElm, iAttrs, controller) {
+      // retrieve the inner directive element
+      var counter = iElm.find('counter')[0];
 
-			var innerScope = angular.element(counter).isolateScope();
-			
-			iElm.on('click', function (e) {
-				e.stopPropagation();
-				scope.$apply(function () {
-					// decorating the increment function with a console log.
-					console.log('click wrapper');
-					// accessing the inner directive api
-					innerScope.increment();
+      var innerScope = angular.element(counter).isolateScope();
+      
+      iElm.on('click', function (e) {
+        e.stopPropagation();
+        scope.$apply(function () {
+          // decorating the increment function with a console log.
+          console.log('click wrapper');
+          // accessing the inner directive api
+          innerScope.increment();
 
-				});
-			});
-		}
-	};
+        });
+      });
+    }
+  };
 
 });
 
@@ -154,28 +156,28 @@ Let's modify the first directive
 
 ```javascript
 myApp.directive('counter', function () {
-	return {
-		scope: {},
-		controller: function ($scope, $element, $attrs, $transclude) {
-			var vm = this;
-			vm.value = 0;
-			vm.increment = function () {
-				vm.value += 1;
-			};
-		},
-		controllerAs: 'vm',
-		link: function (scope, iElm, iAttrs, controller) {
-			iElm.on('click', function (e) {
-				e.stopPropagation();
-				scope.$apply(function () {
-					console.log('click counter');
-					scope.vm.increment();
-				});
-			});
-		},
-		restrict: 'E',
-		template: '<div class="circle counter">{{vm.value}}</div>'
-	};
+  return {
+    scope: {},
+    controller: function ($scope, $element, $attrs, $transclude) {
+      var vm = this;
+      vm.value = 0;
+      vm.increment = function () {
+        vm.value += 1;
+      };
+    },
+    controllerAs: 'vm',
+    link: function (scope, iElm, iAttrs, controller) {
+      iElm.on('click', function (e) {
+        e.stopPropagation();
+        scope.$apply(function () {
+          console.log('click counter');
+          scope.vm.increment();
+        });
+      });
+    },
+    restrict: 'E',
+    template: '<div class="circle counter">{{vm.value}}</div>'
+  };
 });
 ```
 
@@ -183,29 +185,29 @@ And now the second directive
 
 ```javascript
 myApp.directive('wrapcounter', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		template: '<div class="circle wrapcounter" ng-transclude></div>',
-		link: function (scope, iElm, iAttrs, controller) {
-		  // retrieve the inner directive element
-			var counter = iElm.find('counter')[0];
-			
+  return {
+    restrict: 'E',
+    transclude: true,
+    template: '<div class="circle wrapcounter" ng-transclude></div>',
+    link: function (scope, iElm, iAttrs, controller) {
+      // retrieve the inner directive element
+      var counter = iElm.find('counter')[0];
+      
       // retrieve the inner controller
-			var innerController = angular.element(counter).controller('counter');
-			
-			iElm.on('click', function (e) {
-				e.stopPropagation();
-				scope.$apply(function () {
-					// decorating the increment function with a console log.
-					console.log('click wrapper');
-					// accessing the inner directive api
-					innerController.increment();
+      var innerController = angular.element(counter).controller('counter');
+      
+      iElm.on('click', function (e) {
+        e.stopPropagation();
+        scope.$apply(function () {
+          // decorating the increment function with a console log.
+          console.log('click wrapper');
+          // accessing the inner directive api
+          innerController.increment();
 
-				});
-			});
-		}
-	};
+        });
+      });
+    }
+  };
 
 });
 ```
@@ -222,35 +224,44 @@ if (!hasElementTranscludeDirective) {
 So we can use this to get access to the controller:
 ```javascript
 myApp.directive('wrapcounter', function () {
-	return {
-		restrict: 'E',
-		transclude: true,
-		template: '<div class="circle wrapcounter" ng-transclude></div>',
-		link: function (scope, iElm, iAttrs, controller) {
-		  // retrieve the inner directive element
-			var counter = iElm.find('counter')[0];
+  return {
+    restrict: 'E',
+    transclude: true,
+    template: '<div class="circle wrapcounter" ng-transclude></div>',
+    link: function (scope, iElm, iAttrs, controller) {
+      // retrieve the inner directive element
+      var counter = iElm.find('counter')[0];
 
       // retrieve the inner controller
-			var innerController = angular.element(counter).data('$' + 'counter' + 'Controller');
-			
-			iElm.on('click', function (e) {
-				e.stopPropagation();
-				scope.$apply(function () {
-					// decorating the increment function with a console log.
-					console.log('click wrapper');
-					// accessing the inner directive api
-					innerController.increment();
+      var innerController = angular.element(counter).data('$' + 'counter' + 'Controller');
+      
+      iElm.on('click', function (e) {
+        e.stopPropagation();
+        scope.$apply(function () {
+          // decorating the increment function with a console log.
+          console.log('click wrapper');
+          // accessing the inner directive api
+          innerController.increment();
 
-				});
-			});
-		}
-	};
+        });
+      });
+    }
+  };
 
 });
 ```
 
+As you see in any case we have access to the api defined by the inner directive. We could change it, decorate or override existing functions, add our own functions if some are missing from the inner directive, etc...
+
 Hope this makes sense...
+
+Git repo : [https://github.com/thaiat/angular-extending-directive/tree/master/scripts][1]
 
 Happy coding.
 
 Avi
+
+PS: Big thanks to Nir Kaufman that helped me figure it out.
+
+
+  [1]: https://github.com/thaiat/angular-extending-directive/tree/master/scripts
