@@ -2,7 +2,7 @@ Original post is available at http://codrspace.com/thaiat/extending-an-existing-
 
 Let's say you have a third party angularjs directive that you want to extend or simply access the api defined by its controller.   
 We could use `require` but that means that we have to put the 2 directives on the same element, or that the extended directive should be contained inside the first one (looks weird).  
-Well... this is not always possible as we do not have control on the code defining the first directive. It could restrict its usage to 'E', meaning that our extended directive cannot be anymore retricted to 'E'.
+Well... this is not always possible as we do not have control on the code defining the first directive. It could restrict its usage to 'E', meaning that our extended directive cannot be anymore restricted to 'E'.
 
 How can we easily do that, and in a more natural way meaning the extended directive should wrap the first directive ?
 
@@ -116,7 +116,7 @@ and to please our eyes we can add the following css
 Depending on how the first directive **counter** was written we have 3 ways to achieve this.
 
 ##1st way : element.isolateScope
-If the first directive controller uses $scope (like above) we have to retreive the inner element, and the api declared by the scope will be available through `element.isolateScope()`.
+If the first directive controller uses $scope (like above) we have to retrieve the inner element, and the api declared by the scope will be available through `element.isolateScope()`.
 
 ```javascript
 myApp.directive('wrapcounter', function () {
@@ -125,7 +125,7 @@ myApp.directive('wrapcounter', function () {
 		transclude: true,
 		template: '<div class="circle wrapcounter" ng-transclude></div>',
 		link: function (scope, iElm, iAttrs, controller) {
-		  // retreive the inner directive element
+		  // retrieve the inner directive element
 			var counter = iElm.find('counter')[0];
 
 			var innerScope = angular.element(counter).isolateScope();
@@ -188,10 +188,10 @@ myApp.directive('wrapcounter', function () {
 		transclude: true,
 		template: '<div class="circle wrapcounter" ng-transclude></div>',
 		link: function (scope, iElm, iAttrs, controller) {
-		  // retreive the inner directive element
+		  // retrieve the inner directive element
 			var counter = iElm.find('counter')[0];
 			
-      // retreive the inner controller
+      // retrieve the inner controller
 			var innerController = angular.element(counter).controller('counter');
 			
 			iElm.on('click', function (e) {
@@ -227,10 +227,10 @@ myApp.directive('wrapcounter', function () {
 		transclude: true,
 		template: '<div class="circle wrapcounter" ng-transclude></div>',
 		link: function (scope, iElm, iAttrs, controller) {
-		  // retreive the inner directive element
+		  // retrieve the inner directive element
 			var counter = iElm.find('counter')[0];
 
-      // retreive the inner controller
+      // retrieve the inner controller
 			var innerController = angular.element(counter).data('$' + 'counter' + 'Controller');
 			
 			iElm.on('click', function (e) {
