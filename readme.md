@@ -1,6 +1,6 @@
 Working example : http://thaiat.github.io/angular-extending-directive/
 
-Original post is available at http://codrspace.com/thaiat/extending-an-existing-directive-in-angularjs/
+Original post is available at http://thaiat.github.io/blog/2014/03/10/extending-an-existing-directive-in-angularjs/
 
 
 Let's say you have a third party angularjs directive that you want to extend or simply access the api defined by its controller.   
